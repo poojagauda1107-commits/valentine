@@ -1,0 +1,864 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Saras ❤️ Mahesh</title>
+
+  <style>
+    :root{
+      --bg1:#ff7aa8;
+      --bg2:#ffd1dc;
+      --card: rgba(255,255,255,.12);
+      --card2: rgba(255,255,255,.20);
+      --text: rgba(255,255,255,.96);
+      --muted: rgba(255,255,255,.78);
+      --pink:#ff2e75;
+      --pink2:#ff5aa0;
+      --shadow: 0 26px 90px rgba(0,0,0,.32);
+      --r: 28px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; min-height:100vh;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      color:var(--text);
+      background: radial-gradient(circle at top, var(--bg2), var(--bg1));
+      overflow:hidden;
+      display:grid; place-items:center;
+    }
+
+    /* animated glow */
+    .glow{
+      position:fixed; inset:-35%;
+      background: conic-gradient(from 180deg, #ffd1dc, #ff4d88, #ff9eb5, #ffd1dc);
+      filter: blur(95px);
+      opacity:.55;
+      animation: spin 18s linear infinite;
+      pointer-events:none;
+    }
+    @keyframes spin{ to{ transform:rotate(360deg);} }
+
+    /* floating hearts */
+    .hearts{ position:fixed; inset:0; pointer-events:none; opacity:.22; }
+    .h{
+      position:absolute; left:var(--x); top:110%;
+      font-size:var(--s);
+      animation: rise var(--d) linear infinite;
+      filter: blur(.2px);
+    }
+    @keyframes rise{
+      from{ transform:translateY(0); opacity:0; }
+      12%{ opacity:.85; }
+      to{ transform:translateY(-140vh); opacity:0; }
+    }
+
+    /* main card */
+    .card{
+      width:min(1020px, 92vw);
+      height:min(88vh, 780px);
+      border-radius: var(--r);
+      background: linear-gradient(135deg, var(--card), var(--card2));
+      border:1px solid rgba(255,255,255,.22);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(16px);
+      overflow:hidden;
+      position:relative;
+      display:flex;
+      flex-direction:column;
+    }
+
+    .top{
+      padding:14px 16px;
+      display:flex; align-items:center; justify-content:space-between;
+      gap:10px;
+    }
+    .pill{
+      padding:8px 12px;
+      border-radius:999px;
+      background: rgba(255,255,255,.14);
+      border: 1px solid rgba(255,255,255,.18);
+      font-size:12px;
+      color:var(--muted);
+      letter-spacing:.2px;
+      display:flex; gap:8px; align-items:center;
+      user-select:none;
+    }
+    .pill b{ color:var(--text); font-weight:700 }
+    .miniBtns{ display:flex; gap:8px; }
+    .iconBtn{
+      border:0; cursor:pointer;
+      border-radius:14px;
+      padding:10px 12px;
+      background: rgba(255,255,255,.14);
+      border: 1px solid rgba(255,255,255,.18);
+      color:var(--text);
+      box-shadow: 0 14px 24px rgba(0,0,0,.18);
+      transition: transform .12s ease;
+      user-select:none;
+    }
+    .iconBtn:active{ transform:scale(.98) }
+
+    .content{
+      flex:1;
+      overflow:auto;
+      padding: 10px 16px 110px;
+      -webkit-overflow-scrolling: touch;
+    }
+    .content::-webkit-scrollbar{ width:10px; }
+    .content::-webkit-scrollbar-thumb{
+      background: rgba(255,255,255,.18);
+      border-radius:999px;
+    }
+
+    .screen{ display:none; }
+    .screen.active{ display:block; animation: pop .35s ease; }
+    @keyframes pop{
+      from{ transform: translateY(12px) scale(.99); opacity:0; }
+      to{ transform: translateY(0) scale(1); opacity:1; }
+    }
+
+    .center{ text-align:center; }
+    .big{ font-size:78px; margin: 8px 0 6px; }
+    h1{ margin: 8px 0 10px; font-size: 38px; letter-spacing:.2px; }
+    h2{ margin: 0 0 8px; font-size: 18px; color: var(--text); letter-spacing:.2px; }
+    p{ margin:0; font-size:17px; line-height:1.65; color:var(--muted); }
+
+    .ctaRow{
+      margin-top:14px;
+      display:flex; gap:10px; justify-content:center; flex-wrap:wrap;
+    }
+    .btn{
+      border:0; cursor:pointer;
+      border-radius:18px;
+      padding:12px 16px;
+      font-size:16px;
+      color:rgba(255,255,255,.96);
+      background: rgba(255,255,255,.14);
+      border: 1px solid rgba(255,255,255,.18);
+      box-shadow: 0 14px 26px rgba(0,0,0,.20);
+      transition: transform .12s ease, background .2s ease;
+      user-select:none;
+      min-width: 130px;
+    }
+    .btn:active{ transform:scale(.98) }
+    .btn.primary{
+      background: linear-gradient(135deg, var(--pink), var(--pink2));
+      border: 1px solid rgba(255,255,255,.22);
+    }
+    .btn.ghost{ background: rgba(255,255,255,.10); }
+
+    /* panels */
+    .grid2{
+      margin-top:16px;
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap:12px;
+    }
+    @media (max-width:860px){
+      .grid2{ grid-template-columns: 1fr; }
+    }
+    .panel{
+      background: rgba(255,255,255,.10);
+      border: 1px solid rgba(255,255,255,.16);
+      border-radius: 22px;
+      padding:14px;
+    }
+    .hint{
+      margin-top:10px;
+      font-size:12px;
+      opacity:.9;
+      color: rgba(255,255,255,.72);
+    }
+
+    /* gallery */
+    .galleryTop{
+      display:flex; gap:10px; flex-wrap:wrap;
+      align-items:center;
+      margin: 6px 0 12px;
+    }
+    .search{
+      flex:1;
+      min-width: 190px;
+      padding:12px 14px;
+      border-radius:18px;
+      border: 1px solid rgba(255,255,255,.18);
+      background: rgba(255,255,255,.10);
+      color: var(--text);
+      outline:none;
+    }
+    .search::placeholder{ color: rgba(255,255,255,.55); }
+
+    .chips{ display:flex; gap:8px; flex-wrap:wrap; margin-top:6px; }
+    .chip{
+      padding:8px 10px;
+      border-radius:999px;
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.14);
+      font-size:12px;
+      color: var(--muted);
+      cursor:pointer;
+      user-select:none;
+    }
+    .chip.active{
+      background: rgba(255,255,255,.20);
+      color: var(--text);
+      border-color: rgba(255,255,255,.22);
+    }
+
+    .gallery{
+      display:grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap:10px;
+      margin-top:12px;
+    }
+    .tile{
+      border-radius:20px;
+      overflow:hidden;
+      position:relative;
+      border: 1px solid rgba(255,255,255,.18);
+      box-shadow: 0 16px 40px rgba(0,0,0,.22);
+      cursor:pointer;
+      background: rgba(255,255,255,.06);
+    }
+    .tile img{
+      width:100%;
+      height: 160px;
+      object-fit: cover;
+      object-position: top center; /* face top visible in thumbnails */
+      display:block;
+      transform: scale(1.02);
+    }
+    .tile .label{
+      position:absolute;
+      left:10px; right:10px; bottom:8px;
+      font-size:12px;
+      color: rgba(255,255,255,.95);
+      text-shadow: 0 10px 20px rgba(0,0,0,.55);
+      line-height:1.25;
+      z-index:2;
+    }
+    .tile::after{
+      content:"";
+      position:absolute; inset:0;
+      background: linear-gradient(to top, rgba(0,0,0,.52), rgba(0,0,0,0) 56%);
+      pointer-events:none;
+    }
+
+    /* lightbox */
+    .lightbox{
+      position:fixed; inset:0;
+      background: rgba(0,0,0,.72);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:18px;
+      z-index:50;
+    }
+    .lightbox.active{ display:flex; }
+    .lbCard{
+      width:min(980px, 96vw);
+      background: rgba(255,255,255,.10);
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 26px;
+      overflow:hidden;
+      box-shadow: 0 30px 90px rgba(0,0,0,.50);
+      backdrop-filter: blur(16px);
+      position:relative;
+    }
+    .lbImg{
+      width:100%;
+      height: min(72vh, 720px);
+      object-fit: contain; /* show full photo */
+      background: rgba(0,0,0,.35);
+      display:block;
+    }
+    .lbBar{
+      padding:12px 14px;
+      display:flex; gap:10px;
+      align-items:center; justify-content:space-between;
+      color: var(--text);
+    }
+    .lbTitle{
+      font-size:13px;
+      opacity:.95;
+      line-height:1.2;
+    }
+    .lbNav{ display:flex; gap:8px; }
+    .lbBtn{
+      border:0; cursor:pointer;
+      padding:10px 12px;
+      border-radius:14px;
+      background: rgba(255,255,255,.14);
+      border: 1px solid rgba(255,255,255,.18);
+      color: var(--text);
+    }
+
+    /* scratch card */
+    .scratchWrap{
+      margin-top:12px;
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:12px;
+    }
+    .scratchCard{
+      border-radius: 24px;
+      overflow:hidden;
+      border: 1px solid rgba(255,255,255,.18);
+      background: rgba(255,255,255,.10);
+      box-shadow: 0 16px 40px rgba(0,0,0,.22);
+      position:relative;
+    }
+    .scratchInside{
+      padding:16px;
+      min-height: 200px;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      align-items:center;
+      text-align:center;
+    }
+    .secretTitle{
+      font-size:18px;
+      margin:0 0 8px;
+      color: rgba(255,255,255,.96);
+    }
+    .secretText{
+      margin:0;
+      font-size:18px;
+      line-height:1.7;
+      color: rgba(255,255,255,.90);
+      max-width: 52ch;
+    }
+    .scratchHint{
+      margin-top:10px;
+      font-size:12px;
+      color: rgba(255,255,255,.72);
+    }
+    canvas#scratch{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      display:block;
+      touch-action:none;
+    }
+
+    /* sticky footer */
+    .footer{
+      position:absolute;
+      left:0; right:0; bottom:0;
+      padding:12px 14px;
+      display:flex;
+      gap:10px;
+      background: linear-gradient(to top, rgba(0,0,0,.30), rgba(0,0,0,0));
+      backdrop-filter: blur(10px);
+    }
+
+    /* confetti hearts */
+    .burst{ position:fixed; inset:0; pointer-events:none; z-index:60; }
+    .p{
+      position:absolute;
+      left:var(--bx); top:var(--by);
+      font-size: var(--bs);
+      animation: fly var(--bd) ease-out forwards;
+      filter: drop-shadow(0 10px 12px rgba(0,0,0,.28));
+    }
+    @keyframes fly{
+      from{ transform: translate(0,0) scale(1); opacity:1; }
+      to{ transform: translate(var(--dx), var(--dy)) scale(.6); opacity:0; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="glow"></div>
+  <div class="hearts" id="hearts"></div>
+  <div class="burst" id="burst"></div>
+
+  <div class="card">
+    <div class="top">
+      <div class="pill">💌 <b id="fromName">Saras</b> → <b id="toName">Mahesh</b></div>
+      <div class="miniBtns">
+        <button class="iconBtn" id="toggleMusicBtn" title="Play/Pause music">🎵</button>
+        <button class="iconBtn" id="goGalleryBtn" title="Go to gallery">🖼️</button>
+        <button class="iconBtn" id="goScratchBtn" title="Scratch secret">🪄</button>
+      </div>
+    </div>
+
+    <div class="content" id="content">
+      <!-- ASK SCREEN -->
+      <section class="screen active center" id="screenAsk">
+        <div class="big">💘</div>
+        <h1 id="askTitle">Mahesh, will you be my Valentine?</h1>
+        <p>A tiny page, a big feeling. Tap YES 💖</p>
+
+        <div class="ctaRow">
+          <button class="btn primary" id="yesBtn">YES 💖</button>
+          <button class="btn ghost" id="noBtn">NO 🙈</button>
+        </div>
+
+        <div class="grid2">
+          <div class="panel">
+            <h2>Unique ideas inside ✨</h2>
+            <p>
+              🎡 Spin a surprise (cute note)<br>
+              💞 Reason of the day (random)<br>
+              🖼️ Gallery with search + tags + full-screen view<br>
+              🪄 Scratch secret page (hidden text reveal)
+            </p>
+            <div class="ctaRow" style="justify-content:flex-start; margin-top:12px;">
+              <button class="btn" id="wheelBtn">🎡 Spin surprise</button>
+              <button class="btn" id="secretTapBtn">❤️ Tap secret</button>
+            </div>
+            <p class="hint" id="wheelResult"></p>
+          </div>
+
+          <div class="panel">
+            <h2>Reason of the Day 💞</h2>
+            <p id="reasonText"></p>
+            <div class="ctaRow" style="justify-content:flex-start; margin-top:12px;">
+              <button class="btn" id="newReasonBtn">New reason</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- GALLERY SCREEN -->
+      <section class="screen" id="screenGallery">
+        <div class="center">
+          <div class="big">📸</div>
+          <h1>Our Gallery</h1>
+          <p>Search or tap tags — then open any photo full-screen ✨</p>
+        </div>
+
+        <div class="panel" style="margin-top:14px;">
+          <div class="galleryTop">
+            <input class="search" id="search" placeholder="Search memories… (trip, meet, diwali)" />
+            <button class="btn" id="shuffleBtn" style="min-width:auto">🔀 Shuffle</button>
+          </div>
+          <div class="chips" id="chips"></div>
+          <div class="gallery" id="gallery"></div>
+          <div class="hint">Tip: Photos should be named p1.jpeg, p2.jpeg… (same folder as HTML).</div>
+        </div>
+      </section>
+
+      <!-- SCRATCH SECRET SCREEN -->
+      <section class="screen" id="screenScratch">
+        <div class="center">
+          <div class="big">🪄</div>
+          <h1>Scratch the Secret</h1>
+          <p>Rub with finger/mouse to reveal the hidden text 💖</p>
+        </div>
+
+        <div class="scratchWrap">
+          <div class="scratchCard" id="scratchCard">
+            <div class="scratchInside">
+              <h3 class="secretTitle">For Mahesh ❤️</h3>
+              <p class="secretText" id="secretText">
+                You are my calm, my happy place, and my favorite person.
+                I choose you—today, tomorrow, always. 💞
+              </p>
+              <div class="scratchHint">Scratch the silver layer to reveal ✨</div>
+            </div>
+            <canvas id="scratch"></canvas>
+          </div>
+
+          <div class="panel">
+            <h2>Want to change secret text?</h2>
+            <p class="hint">Edit the sentence inside the HTML (id="secretText") and refresh.</p>
+            <div class="ctaRow" style="justify-content:flex-start;">
+              <button class="btn" id="resetScratchBtn">Reset scratch</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- FINAL SCREEN -->
+      <section class="screen center" id="screenFinal">
+        <div class="big">❤️</div>
+        <h1>Happy Valentine’s Day</h1>
+        <p>Forever yours — Saras 💖</p>
+        <div class="ctaRow" style="margin-top:16px;">
+          <button class="btn primary" id="restartBtn">Restart 🔁</button>
+        </div>
+      </section>
+    </div>
+
+    <!-- sticky nav -->
+    <div class="footer">
+      <button class="btn" id="backBtn">⬅ Back</button>
+      <button class="btn primary" id="nextBtn">Next ➜</button>
+    </div>
+  </div>
+
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox">
+    <div class="lbCard">
+      <img class="lbImg" id="lbImg" alt="photo"/>
+      <div class="lbBar">
+        <div class="lbTitle" id="lbTitle">Photo</div>
+        <div class="lbNav">
+          <button class="lbBtn" id="lbPrev">⬅</button>
+          <button class="lbBtn" id="lbNext">➡️</button>
+          <button class="lbBtn" id="lbClose">✕</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <audio id="music" loop preload="auto">
+    <source src="Heeriye.mp3" type="audio/mpeg">
+  </audio>
+
+<script>
+  // ===== Background hearts =====
+  const hearts = document.getElementById("hearts");
+  const hEmo = ["💗","💖","💘","💕","❤️"];
+  for(let k=0;k<22;k++){
+    const d=document.createElement("div");
+    d.className="h";
+    d.textContent=hEmo[Math.floor(Math.random()*hEmo.length)];
+    d.style.setProperty("--x", Math.random()*100 + "vw");
+    d.style.setProperty("--s", (14+Math.random()*18) + "px");
+    d.style.setProperty("--d", (7+Math.random()*9) + "s");
+    d.style.animationDelay = (-Math.random()*12) + "s";
+    hearts.appendChild(d);
+  }
+
+  // ===== Confetti hearts burst =====
+  const burst = document.getElementById("burst");
+  function heartBurst(){
+    const cx = (window.innerWidth/2) + (Math.random()*40-20);
+    const cy = (window.innerHeight/2) + (Math.random()*40-20);
+    const em = ["💖","💘","💕","❤️","💗"];
+    for(let i=0;i<22;i++){
+      const p=document.createElement("div");
+      p.className="p";
+      p.textContent=em[Math.floor(Math.random()*em.length)];
+      p.style.setProperty("--bx", cx+"px");
+      p.style.setProperty("--by", cy+"px");
+      p.style.setProperty("--bs", (14+Math.random()*18)+"px");
+      p.style.setProperty("--bd", (700+Math.random()*600)+"ms");
+      const dx = (Math.random()*500 - 250) + "px";
+      const dy = (Math.random()*-520 - 80) + "px";
+      p.style.setProperty("--dx", dx);
+      p.style.setProperty("--dy", dy);
+      burst.appendChild(p);
+      setTimeout(()=>p.remove(), 1400);
+    }
+  }
+
+  // ===== Names (edit here if needed) =====
+  const FROM = "Saras";
+  const TO = "Mahesh";
+  document.getElementById("fromName").textContent = FROM;
+  document.getElementById("toName").textContent = TO;
+  document.getElementById("askTitle").textContent = `${TO}, will you be my Valentine?`;
+
+  // ===== Unique ideas: Reason of the Day + Wheel =====
+  const reasons = [
+    "Because your smile is my favorite place.",
+    "Because you make even ordinary days feel special.",
+    "Because with you, I feel calm and happy.",
+    "Because you understand me without words.",
+    "Because you’re my best memory and my best decision.",
+    "Because you’re kind, caring, and wonderfully you.",
+  ];
+  const surprises = [
+    "If you say YES, you get unlimited hugs coupon 💝",
+    "Date idea: long walk + chai + your favorite song 🎵",
+    "I owe you: 1 movie + 1 dessert + 1 extra cuddle 🍿🍰",
+    "Secret: I fall for you again… every day 😳❤️",
+    "You’re the plot twist I never knew I needed 💘",
+  ];
+  const reasonText = document.getElementById("reasonText");
+  function newReason(){
+    reasonText.textContent = reasons[Math.floor(Math.random()*reasons.length)];
+  }
+  newReason();
+  document.getElementById("newReasonBtn").onclick = newReason;
+
+  const wheelResult = document.getElementById("wheelResult");
+  document.getElementById("wheelBtn").onclick = () => {
+    wheelResult.textContent = "✨ " + surprises[Math.floor(Math.random()*surprises.length)];
+    heartBurst();
+  };
+  document.getElementById("secretTapBtn").onclick = () => {
+    wheelResult.textContent = "❤️ Secret: I love you more than I can explain.";
+    heartBurst();
+  };
+
+  // ===== Screens + navigation =====
+  const screens = [
+    "screenAsk",
+    "screenGallery",
+    "screenScratch",
+    "screenFinal"
+  ];
+  let screenIndex = 0;
+
+  function showScreen(id){
+    screens.forEach(s => document.getElementById(s).classList.remove("active"));
+    document.getElementById(id).classList.add("active");
+    document.getElementById("content").scrollTop = 0;
+  }
+
+  function setNavButtons(){
+    document.getElementById("backBtn").style.visibility = (screenIndex === 0) ? "hidden" : "visible";
+    document.getElementById("nextBtn").textContent = (screenIndex === screens.length-1) ? "Restart 🔁" : "Next ➜";
+  }
+
+  function go(idx){
+    screenIndex = Math.max(0, Math.min(screens.length-1, idx));
+    showScreen(screens[screenIndex]);
+    setNavButtons();
+  }
+
+  document.getElementById("backBtn").onclick = () => go(screenIndex - 1);
+  document.getElementById("nextBtn").onclick = () => {
+    if(screenIndex === screens.length-1){
+      go(0);
+      music.pause(); music.currentTime = 0;
+      playing = false;
+      toggleMusicBtn.textContent = "🎵";
+      resetScratch();
+    }else{
+      go(screenIndex + 1);
+    }
+  };
+  setNavButtons();
+
+  document.getElementById("goGalleryBtn").onclick = () => go(1);
+  document.getElementById("goScratchBtn").onclick = () => go(2);
+
+  // ===== Music: auto play on YES; manual toggle available =====
+  const music = document.getElementById("music");
+  const toggleMusicBtn = document.getElementById("toggleMusicBtn");
+  let playing = false;
+
+  async function playMusic(){
+    try{
+      await music.play();
+      playing = true;
+      toggleMusicBtn.textContent = "🔇";
+    }catch(e){
+      // ignore (browser policy)
+    }
+  }
+  function pauseMusic(){
+    music.pause();
+    playing = false;
+    toggleMusicBtn.textContent = "🎵";
+  }
+  toggleMusicBtn.onclick = () => (playing ? pauseMusic() : playMusic());
+
+  // YES button: play music + burst + jump to gallery
+  const noBtn = document.getElementById("noBtn");
+  function runAway(btn){
+    const x = Math.random()*220 - 110;
+    const y = Math.random()*120 - 60;
+    btn.style.transform = `translate(${x}px, ${y}px)`;
+  }
+  noBtn.addEventListener("mouseenter", () => runAway(noBtn));
+  noBtn.addEventListener("click", () => runAway(noBtn));
+
+  document.getElementById("yesBtn").onclick = async () => {
+    heartBurst();
+    await playMusic();
+    go(1);
+  };
+
+  // ===== Gallery data (add more images easily) =====
+  // Put images in same folder: p1.jpeg, p2.jpeg ... p10.jpeg
+  const items = [
+    {src:"p1.jpeg", title:"First Meet", tags:["meet","first"]},
+    {src:"p2.jpeg", title:"Official", tags:["official","love"]},
+    {src:"p3.jpeg", title:"First Trip", tags:["trip","first"]},
+    {src:"p4.jpeg", title:"First Movie Date", tags:["movie","date"]},
+    {src:"p5.jpeg", title:"First Diwali", tags:["diwali","festival"]},
+    {src:"p6.jpeg", title:"Second Trip", tags:["trip","second"]},
+    {src:"p7.jpeg", title:"Sweet Memories", tags:["memories","sweet"]},
+    {src:"p8.jpeg", title:"More Smiles", tags:["memories","sweet"]},
+    {src:"p9.jpeg", title:"Random Day", tags:["memories"]},
+    {src:"p10.jpeg", title:"Us", tags:["love","memories"]},
+  ];
+
+  // Build tags list
+  const allTags = Array.from(new Set(items.flatMap(x => x.tags))).sort();
+  const chipsEl = document.getElementById("chips");
+  let activeTag = "all";
+
+  function renderChips(){
+    chipsEl.innerHTML = "";
+    const mk = (tag) => {
+      const c = document.createElement("div");
+      c.className = "chip" + (activeTag===tag ? " active" : "");
+      c.textContent = tag === "all" ? "all" : tag;
+      c.onclick = () => {
+        activeTag = tag;
+        renderChips();
+        renderGallery();
+      };
+      chipsEl.appendChild(c);
+    };
+    mk("all");
+    allTags.forEach(mk);
+  }
+
+  const galleryEl = document.getElementById("gallery");
+  const searchEl = document.getElementById("search");
+
+  function filteredItems(){
+    const q = (searchEl.value || "").trim().toLowerCase();
+    return items.filter(it => {
+      const matchesTag = activeTag === "all" || it.tags.includes(activeTag);
+      const matchesSearch = !q || it.title.toLowerCase().includes(q) || it.tags.join(" ").includes(q);
+      return matchesTag && matchesSearch;
+    });
+  }
+
+  function renderGallery(){
+    const data = filteredItems();
+    galleryEl.innerHTML = "";
+    data.forEach((it, idx) => {
+      const tile = document.createElement("div");
+      tile.className = "tile";
+      tile.innerHTML = `<img src="${it.src}" alt="${it.title}"/><div class="label">${it.title}</div>`;
+      tile.onclick = () => openLightbox(data, idx);
+      galleryEl.appendChild(tile);
+    });
+  }
+
+  searchEl.addEventListener("input", renderGallery);
+  document.getElementById("shuffleBtn").onclick = () => {
+    // Fisher-Yates shuffle (on items order)
+    for(let i=items.length-1;i>0;i--){
+      const j = Math.floor(Math.random()*(i+1));
+      [items[i], items[j]] = [items[j], items[i]];
+    }
+    renderGallery();
+    heartBurst();
+  };
+
+  renderChips();
+  renderGallery();
+
+  // ===== Lightbox =====
+  const lightbox = document.getElementById("lightbox");
+  const lbImg = document.getElementById("lbImg");
+  const lbTitle = document.getElementById("lbTitle");
+  let lbData = [];
+  let lbIndex = 0;
+
+  function openLightbox(data, index){
+    lbData = data;
+    lbIndex = index;
+    showLB();
+    lightbox.classList.add("active");
+  }
+  function showLB(){
+    const it = lbData[lbIndex];
+    lbImg.src = it.src;
+    lbTitle.textContent = `${it.title} • ${it.tags.join(", ")}`;
+  }
+  function closeLB(){ lightbox.classList.remove("active"); }
+
+  document.getElementById("lbClose").onclick = closeLB;
+  document.getElementById("lbPrev").onclick = () => { lbIndex = (lbIndex-1+lbData.length)%lbData.length; showLB(); };
+  document.getElementById("lbNext").onclick = () => { lbIndex = (lbIndex+1)%lbData.length; showLB(); };
+  lightbox.addEventListener("click", (e)=>{ if(e.target === lightbox) closeLB(); });
+
+  window.addEventListener("keydown", (e)=>{
+    if(!lightbox.classList.contains("active")) return;
+    if(e.key === "Escape") closeLB();
+    if(e.key === "ArrowLeft") document.getElementById("lbPrev").click();
+    if(e.key === "ArrowRight") document.getElementById("lbNext").click();
+  });
+
+  // ===== Scratch card (canvas) =====
+  const scratch = document.getElementById("scratch");
+  const scratchCard = document.getElementById("scratchCard");
+  const ctx = scratch.getContext("2d");
+  let drawing = false;
+
+  function resizeScratch(){
+    const rect = scratchCard.getBoundingClientRect();
+    scratch.width = Math.floor(rect.width);
+    scratch.height = Math.floor(rect.height);
+    drawCover();
+  }
+
+  function drawCover(){
+    // silver gradient cover
+    const g = ctx.createLinearGradient(0,0,scratch.width,scratch.height);
+    g.addColorStop(0, "rgba(230,230,230,.95)");
+    g.addColorStop(.5, "rgba(180,180,180,.95)");
+    g.addColorStop(1, "rgba(240,240,240,.95)");
+    ctx.globalCompositeOperation = "source-over";
+    ctx.fillStyle = g;
+    ctx.fillRect(0,0,scratch.width,scratch.height);
+
+    // text on cover
+    ctx.fillStyle = "rgba(0,0,0,.55)";
+    ctx.font = "bold 16px system-ui, -apple-system, Segoe UI, Roboto, Arial";
+    ctx.textAlign = "center";
+    ctx.fillText("Scratch here ✨", scratch.width/2, scratch.height/2);
+  }
+
+  function scratchAt(x, y){
+    ctx.globalCompositeOperation = "destination-out";
+    ctx.beginPath();
+    ctx.arc(x, y, 20, 0, Math.PI*2);
+    ctx.fill();
+  }
+
+  function getPos(e){
+    const r = scratch.getBoundingClientRect();
+    const touch = e.touches && e.touches[0];
+    const clientX = touch ? touch.clientX : e.clientX;
+    const clientY = touch ? touch.clientY : e.clientY;
+    return { x: clientX - r.left, y: clientY - r.top };
+  }
+
+  scratch.addEventListener("pointerdown", (e)=>{ drawing=true; scratch.setPointerCapture(e.pointerId); });
+  scratch.addEventListener("pointerup", ()=>{ drawing=false; });
+  scratch.addEventListener("pointercancel", ()=>{ drawing=false; });
+  scratch.addEventListener("pointermove", (e)=>{
+    if(!drawing) return;
+    const p = getPos(e);
+    scratchAt(p.x, p.y);
+  });
+
+  function resetScratch(){
+    resizeScratch();
+  }
+  document.getElementById("resetScratchBtn").onclick = resetScratch;
+
+  // Ensure scratch is ready when entering scratch page
+  const goScratchBtn = document.getElementById("goScratchBtn");
+  goScratchBtn.addEventListener("click", ()=> setTimeout(resetScratch, 120));
+
+  // Resize on window changes
+  window.addEventListener("resize", ()=> {
+    if(document.getElementById("screenScratch").classList.contains("active")){
+      resetScratch();
+    }
+  });
+
+  // ===== Quick jumps =====
+  document.getElementById("goGalleryBtn").onclick = () => go(1);
+  document.getElementById("goScratchBtn").onclick = () => { go(2); setTimeout(resetScratch, 120); };
+
+  // Restart
+  document.getElementById("restartBtn").onclick = () => {
+    go(0);
+    pauseMusic();
+    resetScratch();
+  };
+
+  // start scratch cover prepared lazily
+  // (only when first opened)
+</script>
+</body>
+</html>
